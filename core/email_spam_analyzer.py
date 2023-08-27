@@ -8,6 +8,7 @@ from sklearn.svm import SVC
 from utils.data_sanitizer import DataSanitizer
 from wordcloud import WordCloud
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import joblib
 
 
 class EmailSpamAnalyzer:
@@ -155,13 +156,18 @@ class EmailSpamAnalyzer:
         self.y_pred = self.SVM.predict(x_test)
         self.model_accuracy_score = accuracy_score(self.y_test, self.y_pred)
         
-
+    def save_model(self,filename:str='model_email_spam_detector.joblib') -> bool:
+        if filename:
+            joblib.dump(self.SVM, 'core/machine_learning/ml_model_export/' + filename)
+            return True
+        else:
+            return False
         
 
 
 
-email_spam_analyzer = EmailSpamAnalyzer('core/machine_learning/data/spam_test.csv')
-email_spam_analyzer.sanitize_data()
+# email_spam_analyzer = EmailSpamAnalyzer('core/machine_learning/data/spam_test.csv')
+# email_spam_analyzer.sanitize_data()
 # email_spam_analyzer.display_data_length_info()
 # email_spam_analyzer.graph_display_number_of_labels()
 # email_spam_analyzer.graph_display_message_distribution_before_data_sanitizing()
@@ -170,5 +176,6 @@ email_spam_analyzer.sanitize_data()
 # email_spam_analyzer.display_wordcloud_for_non_spam_emails()
 # email_spam_analyzer.generate_model()
 # email_spam_analyzer.train_model()
+# email_spam_analyzer.save_model()
 # email_spam_analyzer.display_all_messages()
 # email_spam_analyzer.display_confusion_matrix()
