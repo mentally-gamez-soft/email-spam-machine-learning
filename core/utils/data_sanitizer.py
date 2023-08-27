@@ -1,16 +1,16 @@
 import re
 from pandas.core.strings.accessor import StringMethods
+from pandas.core.series import Series
 
 class DataSanitizer():
 
     def __init__(self, text) -> None:
         self.text = text
-        print(type(self.text))
 
     def set_text(self,search_pattern:str=None,replace:str=''):
         if type(self.text) == str:
             self.text = re.sub(search_pattern,replace,self.text)
-        elif type(self.text) == StringMethods:
+        elif type(self.text) in (StringMethods,Series):
             self.text = self.text.replace(search_pattern,replace,regex=True)
 
     def __sanitize_data(self,search_pattern:str=None,replace:str='',overwright_text:bool=False):
@@ -18,7 +18,16 @@ class DataSanitizer():
             self.set_text(search_pattern,replace)
             return self.text
 
-        return re.sub(search_pattern,replace,self.text) if type(self.text) == str else self.text.replace(search_pattern,replace,regex=True)
+        return re.sub(search_pattern,replace,self.text) if type(self.text) == str else self.text.replace(r'{}'.format(search_pattern),replace,regex=True)
+
+    def sanitize_font(self,overwright_text:bool=False):
+        if overwright_text:
+            if type(self.text) == str:
+                self.text = self.text.lower()
+            elif type(self.text) == StringMethods:
+                self.text = self.text.str.lower()
+            
+        return self.text.lower() if type(self.text) == str else self.text.str.lower() 
 
     def sanitize_email(self,replace:str='emailaddress',overwright_text:bool=False):
         pattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*"

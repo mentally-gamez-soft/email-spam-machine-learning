@@ -121,3 +121,12 @@ class TestDataSanitizer(unittest.TestCase):
         result = data_sanitizer.sanitize_web_url()
         self.assertEqual(result.item(),"Hey,Great deal on webaddress Farm tour: 9am to 5pm ? $95/pax or €80/pax or £50/pax. Call to +420 123 123 123")
 
+    def test_series_sanitize_font(self):
+        data_sanitizer = DataSanitizer(pd.Series(["Hey,Great deal on https://stackoverflow.com/questions/60456814/get-list-of-supported-countries-from-faker Farm tour: 9am to 5pm ? $95/pax or €80/pax or £50/pax. Call to +420 123 123 123"]))
+        result = data_sanitizer.sanitize_font()
+        self.assertEqual(result.item(),"hey,great deal on https://stackoverflow.com/questions/60456814/get-list-of-supported-countries-from-faker farm tour: 9am to 5pm ? $95/pax or €80/pax or £50/pax. call to +420 123 123 123")
+
+    def test_str_sanitize_font(self):
+        data_sanitizer = DataSanitizer("Hey,Great deal on https://stackoverflow.com/questions/60456814/get-list-of-supported-countries-from-faker Farm tour: 9am to 5pm ? $95/pax or €80/pax or £50/pax. Call to +420 123 123 123")
+        result = data_sanitizer.sanitize_font()
+        self.assertEqual(result,"hey,great deal on https://stackoverflow.com/questions/60456814/get-list-of-supported-countries-from-faker farm tour: 9am to 5pm ? $95/pax or €80/pax or £50/pax. call to +420 123 123 123")
