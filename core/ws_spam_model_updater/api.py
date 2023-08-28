@@ -1,15 +1,16 @@
-from flask import Flask, request, jsonify
-from __init__ import create_app
-from app import app 
+from flask import Blueprint, jsonify, request
 
-# web_service_api = Flask(__name__)
-# web_service_api = create_app()
+urls_blueprint = Blueprint('api_urls', __name__)
 
-@app.route('/spam-email-refine/api/v1.0', methods=['GET'])
+@urls_blueprint.route('/', methods=['GET'])
+def home2():
+    return 'Page par defaut', 200
+
+@urls_blueprint.route('/spam-email-refine/api/v1.0', methods=['GET'])
 def home():
     return 'Welcome to this web service\nThe aim is for you to refine an email that was classified as ham or spam.', 200
 
-@app.route('/spam-email-refine/api/v1.0/redifine-email', methods=['POST'])
+@urls_blueprint.route('/spam-email-refine/api/v1.0/redifine-email', methods=['POST'])
 def refine_model_email():
     payload = request.get_json(force=True)
     if 'email' not in payload.keys():
