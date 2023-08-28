@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify
 from __init__ import create_app
+from app import app 
 
 # web_service_api = Flask(__name__)
-web_service_api = create_app()
+# web_service_api = create_app()
 
-@web_service_api.route('/spam-email-refine/api/v1.0', methods=['GET'])
+@app.route('/spam-email-refine/api/v1.0', methods=['GET'])
 def home():
     return 'Welcome to this web service\nThe aim is for you to refine an email that was classified as ham or spam.', 200
 
-@web_service_api.route('/spam-email-refine/api/v1.0/redifine-email', methods=['POST'])
+@app.route('/spam-email-refine/api/v1.0/redifine-email', methods=['POST'])
 def refine_model_email():
     payload = request.get_json(force=True)
     if 'email' not in payload.keys():
