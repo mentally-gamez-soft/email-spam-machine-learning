@@ -19,7 +19,7 @@ jobs:
     env:
       DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
       DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
-      DOCKER_IMG_NAME: projects-docker-images:ws-spam-model-updater-1.0c
+      DOCKER_IMG_NAME: projects-docker-images:ws-spam-model-updater-1.0d
     strategy:
       matrix:
         os: [ubuntu-latest]
