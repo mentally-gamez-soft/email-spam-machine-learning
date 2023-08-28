@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
+from __init__ import create_app
 
 # web_service_api = Flask(__name__)
+web_service_api = create_app()
 
 @web_service_api.route('/spam-email-refine/api/v1.0', methods=['GET'])
 def home():
