@@ -23,7 +23,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        version: ['3.11', '3.10', '3.9', '3.8']
+        # version: ['3.11', '3.10', '3.9', '3.8']
+        version: ['3.11']
 
     steps:
     - uses: actions/checkout@v3
@@ -57,3 +58,9 @@ jobs:
     - name: docker push application image
       run: |
         docker push $DOCKER_USER/$DOCKER_IMG_NAME   
+    - name: deploy on dev server
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ${{secrets.SSH_DEV_SERVER_CONTABO}} root@167.86.83.102 "
+          docker login -u $DOCKER_USER -p $DOCKER_PASS &&
+          docker ps -aq | xargs docker stop | xargs docker rm &&
+          docker run -d -p 5000:5000 $DOCKER_USER/$DOCKER_IMG_NAME"
