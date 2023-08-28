@@ -60,8 +60,8 @@ jobs:
         docker push $DOCKER_USER/$DOCKER_IMG_NAME   
     - name: deploy on dev server
       run: |
-        echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@167.86.83.102 "
+        echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
+        ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa root@167.86.83.102 "
           docker login -u $DOCKER_USER -p $DOCKER_PASS &&
           docker ps -aq | xargs docker stop | xargs docker rm &&
           docker run -d -p 5000:5000 $DOCKER_USER/$DOCKER_IMG_NAME"
