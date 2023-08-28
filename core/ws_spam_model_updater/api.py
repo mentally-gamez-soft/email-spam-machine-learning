@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-web_service_api = Flask(__name__)
+# web_service_api = Flask(__name__)
 
 @web_service_api.route('/spam-email-refine/api/v1.0', methods=['GET'])
 def home():
@@ -23,9 +23,9 @@ def refine_model_email():
         payload['classification'] = "1"
 
     email_to_analyze = payload['email']
-    print('email_to_analyze 1 => ' + email_to_analyze)
+    # print('email_to_analyze 1 => ' + email_to_analyze)
     email_classification = payload['classification']
-    print('email_classification 1 => ' + email_classification)
+    # print('email_classification 1 => ' + email_classification)
 
     # email_to_analyze = [email_to_analyze]
     # print('email_to_analyze 2  => ' + email_to_analyze[0])

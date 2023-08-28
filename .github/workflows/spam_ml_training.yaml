@@ -16,6 +16,10 @@ jobs:
   build:
 
     runs-on: ${{matrix.os}}
+    env:
+      DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+      DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
+      DOCKER_IMG_NAME: projects-docker-images:ws-spam-model-updater-1.0c
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -44,3 +48,12 @@ jobs:
       run: |
         # pytest
         python -m unittest tests/test_data_sanitizer.py
+    - name: docker build application image
+      run: |
+        docker build -t $DOCKER_USER/$DOCKER_IMG_NAME .
+    - name: docker login
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - name: docker push application image
+      run: |
+        docker push $DOCKER_USER/$DOCKER_IMG_NAME   
