@@ -1,6 +1,6 @@
 FROM python:3.10-bookworm
 
-LABEL Name="WS to update spam email model (flask app)" Version=0.0.1
+LABEL Name="WS to update spam email model (flask app)" Version=0.1.0
 
 WORKDIR /ws-spam-model
 COPY requirements.in .
@@ -10,7 +10,11 @@ RUN pip-compile requirements.in
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
-COPY core/machine_learning/data/spam_essai.csv ./core/machine_learning/data/spam_essai.csv
+COPY core/__init__.py ./core/__init__.py
+COPY core/email_spam_analyzer.py ./core/email_spam_analyzer.py
+COPY static ./static
+COPY core/utils ./core/utils
+COPY core/machine_learning/data/spam.csv ./core/machine_learning/data/spam.csv
 COPY core/ws_spam_model_updater ./core/ws_spam_model_updater
 
 EXPOSE 5000

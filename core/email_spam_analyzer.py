@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from utils.data_sanitizer import DataSanitizer
+from core.utils.data_sanitizer import DataSanitizer
 from wordcloud import WordCloud
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
@@ -156,7 +156,7 @@ class EmailSpamAnalyzer:
         self.y_pred = self.SVM.predict(x_test)
         self.model_accuracy_score = accuracy_score(self.y_test, self.y_pred)
         
-    def save_model(self,filename:str='model_email_spam_detector.joblib') -> bool:
+    def save_model(self,filename:str='email_spam_detector_model.joblib') -> bool:
         if filename:
             joblib.dump(self.SVM, 'core/machine_learning/ml_model_export/' + filename)
             return True
