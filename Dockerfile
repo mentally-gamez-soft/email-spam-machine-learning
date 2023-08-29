@@ -16,6 +16,7 @@ COPY static ./static
 COPY core/utils ./core/utils
 COPY core/machine_learning/data/spam.csv ./core/machine_learning/data/spam.csv
 COPY core/ws_spam_model_updater ./core/ws_spam_model_updater
+COPY core/machine_learning/ml_model_export/email_spam_detector_model.joblib ./core/machine_learning/ml_model_export/email_spam_detector_model.joblib
 
 EXPOSE 5000
 
