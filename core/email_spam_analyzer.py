@@ -18,6 +18,7 @@ class EmailSpamAnalyzer:
         self.data_sanitizer = DataSanitizer(self.df['EmailText'].str)
         self.df['length'] = self.df.EmailText.str.len()
         self.SVM = None
+        self.tf_vec = None
         self.features = None
         self.model_accuracy_score = None
         self.y_test = None
@@ -143,9 +144,9 @@ class EmailSpamAnalyzer:
         self.__remove_stop_words()
 
     def generate_model(self):
-        tf_vec = TfidfVectorizer()
+        self.tf_vec = TfidfVectorizer()
         self.SVM = SVC(C=1.0,kernel='linear',degree=3,gamma='auto')
-        self.features = tf_vec.fit_transform(self.df['EmailText'])
+        self.features = self.tf_vec.fit_transform(self.df['EmailText'])
     
     def train_model(self):
         x = self.features
@@ -159,6 +160,7 @@ class EmailSpamAnalyzer:
     def save_model(self,filename:str='email_spam_detector_model.joblib') -> bool:
         if filename:
             joblib.dump(self.SVM, 'core/machine_learning/ml_model_export/' + filename)
+            joblib.dump(self.tf_vec, 'core/machine_learning/ml_model_export/tf_vectorizer.joblib')
             return True
         else:
             return False
