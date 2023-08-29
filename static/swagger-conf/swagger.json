@@ -16,7 +16,7 @@
       "application/json"
     ],
     "definitions": {
-      "Payload": {
+      "Payload_Define_Email": {
         "type": "object",
         "properties": {
           "email": {
@@ -27,10 +27,18 @@
             "value":["ham","spam"]
           }
         }
+      },
+      "Payload_Display_Email": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
       }
     },
     "paths": {
-      "/define-email": {
+      "/define-email-classification": {
         "post": {
           "description": "Set the status of an email as a SPAM or a HAM",
           "consumes": [
@@ -47,7 +55,7 @@
               "description": "Input your email and the flag for it to be spam or ham",
               "required": true,
               "schema": {
-                "$ref": "#/definitions/Payload"
+                "$ref": "#/definitions/Payload_Define_Email"
               }
             }
           ],
@@ -72,7 +80,7 @@
       },
       "/generate_model": {
         "get": {
-          "description": "Execute the creation of the model with the newest set of data",
+          "description": "Execute the creation of the model with the latest set of data",
           "consumes": [
             "application/json"
           ],
@@ -89,6 +97,47 @@
                   "status": {
                     "type": "string",
                     "value": "ok"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/my_email_is_spam_or_ham": {
+        "post": {
+          "description": "Indicates to the user if an email is a SPAM or a HAM",
+          "consumes": [
+            "application/json"
+          ],
+          "summary": "Display a message to the user indicating if an email is a SPAM or a HAM",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Enter your email message",
+              "in": "body",
+              "description": "Input an email message",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Payload_Display_Email"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "value": ["ok","ko"]
+                  },
+                  "classification": {
+                    "type": "string",
+                    "value": ["ham","spam","this email can not be auto-classified yet.\nHint: you could set its classification for refining purposes by calling 'define-email-classification'"]
                   }
                 }
               }
