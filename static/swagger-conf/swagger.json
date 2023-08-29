@@ -1,0 +1,100 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Email Spam Model Updater API",
+      "description": "This webservice is used to manually set an email as a spam or a ham.",
+      "version": "1.0"
+    },
+    "basePath": "/spam-email-refine/api/v1.0",
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "definitions": {
+      "Payload": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string",
+            "value":["ham","spam"]
+          }
+        }
+      }
+    },
+    "paths": {
+      "/define-email": {
+        "post": {
+          "description": "Set the status of an email as a SPAM or a HAM",
+          "consumes": [
+            "application/json"
+          ],
+          "summary": "Allow the users to define an email as a SPAM or a HAM",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Set Email for SPAM or HAM",
+              "in": "body",
+              "description": "Input your email and the flag for it to be spam or ham",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Payload"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "value": ["ok","ko"]
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/generate_model": {
+        "get": {
+          "description": "Execute the creation of the model with the newest set of data",
+          "consumes": [
+            "application/json"
+          ],
+          "summary": "Regenerate the model taking into account the latest update on the dataset",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response.",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "value": "ok"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
