@@ -62,7 +62,7 @@ jobs:
       run: |
         echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
         chmod 400 ~/work/_temp/dev_server_rsa
-        ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa root@167.86.83.102 "
+        ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa root@75.119.152.85 "
           docker login -u $DOCKER_USER -p $DOCKER_PASS &&          
           docker-compose -f /root/delivery/docker-compose.yaml down &&
           docker-compose -f /root/delivery/docker-compose.yaml up"
