@@ -64,8 +64,8 @@ jobs:
         chmod 400 ~/work/_temp/dev_server_rsa
         ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa root@167.86.83.102 "
           docker login -u $DOCKER_USER -p $DOCKER_PASS &&          
-          docker-compose -f $HOME/delivery/docker-compose.yaml down &&
-          docker-compose -f $HOME/delivery/docker-compose.yaml up"
+          docker-compose -f /root/delivery/docker-compose.yaml down &&
+          docker-compose -f /root/delivery/docker-compose.yaml up"
         rm -f ~/work/_temp/dev_server_rsa
       
       # docker ps -aq | xargs docker stop | xargs docker rm
