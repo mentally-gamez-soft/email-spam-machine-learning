@@ -3,7 +3,8 @@ import os
 from flask import Flask
 
 from core.ws_spam_model_updater.api import urls_blueprint
-from core.ws_spam_model_updater.swagger_docs.swagger_config import swaggerui_blueprint,SWAGGER_URL
+from core.ws_spam_model_updater.swagger_docs.swagger_config import (
+    SWAGGER_URL, swaggerui_blueprint)
 
 app = Flask(__name__, static_url_path='/static')
 app.register_blueprint(urls_blueprint)

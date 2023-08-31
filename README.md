@@ -1,4 +1,5 @@
-# Machine learning API for email spam classifier:
+# Machine learning API for email spam classifier [![Spam Emails Machine Learning Trainer](https://github.com/mentally-gamez-soft/email-spam-machine-learning/actions/workflows/spam_ml_training.yaml/badge.svg?branch=main)](https://github.com/mentally-gamez-soft/email-spam-machine-learning/actions/workflows/spam_ml_training.yaml) 
+
 
 ## This project covers the following topics
  - How to correctly package a python project 
@@ -9,6 +10,9 @@
  - How to use unittest
  - How to use swagger documentation with Flask
 
+
+# Definitions des endoints
+    http://167.86.83.102:5000/swagger
 
 ### Endpoint http://167.86.83.102:5000/spam-email-refine/api/v1.0/define-email-classification
 

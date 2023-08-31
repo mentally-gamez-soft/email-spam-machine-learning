@@ -3,9 +3,10 @@ from datetime import datetime, timedelta
 
 import joblib
 from flask import Blueprint, jsonify, request
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from core.email_spam_analyzer import EmailSpamAnalyzer
-from sklearn.feature_extraction.text import TfidfVectorizer
+from core.utils.db_manager import DbManager
 
 urls_blueprint = Blueprint('api_urls', __name__)
 
@@ -34,20 +35,23 @@ def refine_model_email():
         payload['classification'] = "1"
 
     email_to_analyze = payload['email']
-    # print('email_to_analyze 1 => ' + email_to_analyze)
     email_classification = payload['classification']
-    # print('email_classification 1 => ' + email_classification)
-
-    # email_to_analyze = [email_to_analyze]
-    # print('email_to_analyze 2  => ' + email_to_analyze[0])
-    # email_classification = [email_classification]
-    # print('email_classification 2 => ' + email_classification[0])
-    
-    spam_data_file = open("core/machine_learning/data/spam.csv", "a") 
-    spam_data_file.write('\n"' + email_classification + '","' + email_to_analyze + '"')
-    spam_data_file.close()
     message_status = 'spam' if email_classification == "1" else 'ham'
-    result = {'status':'ok','message':'your email has been added as {}'.format(message_status)}
+    user_ip_address = request.remote_addr
+    
+    dbManager = DbManager()
+    dbManager.connect()
+    if not dbManager.exist_email(email_to_analyze):
+        dbManager.add_email(email=email_to_analyze,tag=message_status,ip_address=user_ip_address,comment='valid add email operation')
+
+        spam_data_file = open("core/machine_learning/data/spam.csv", "a") 
+        spam_data_file.write('\n"' + email_classification + '","' + email_to_analyze + '"')
+        spam_data_file.close()        
+        
+        result = {'status':'ok','message':'your email has been added as {}'.format(message_status)}
+    else:
+        dbManager.add_rejected_email(email=email_to_analyze,tag=message_status,ip_address=user_ip_address,comment='invalid already exsiting email.')
+        result = {'status':'ok','message':'your email will be taken into account.'}
 
     return jsonify(result), 200
 
