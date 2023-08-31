@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   ws-spam-email:
-    image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:ws-spam-model-updater-1.2.0c
+    image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:ws-spam-model-updater-1.2.0d
     ports:
       - 5000:5000
   mongo-db:
