@@ -1,6 +1,6 @@
-FROM python:3.10-bookworm
+FROM python:3.12-rc-alpine
 
-LABEL Name="WS to update spam email model (flask app)" Version=1.2.0c
+LABEL Name="WS to update spam email model (flask app)" Version=1.2.0e
 
 WORKDIR /ws-spam-model
 COPY requirements.in .
