@@ -3,7 +3,7 @@ FROM python:3.10-bookworm
 # Install vi editor in container
 RUN apt-get update && apt-get install -y vim
 
-LABEL Name="WS to update spam email model (flask app)" Version=1.2.1e
+LABEL Name="WS to update spam email model (flask app)" Version=1.3.0a
 
 WORKDIR /ws-spam-model
 COPY requirements.in .
