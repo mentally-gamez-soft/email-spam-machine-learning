@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-      "title": "Email Spam Model Updater API",
+      "title": "Email Scoring API v2.0.0a",
       "description": "This webservice is used to manually set an email as a spam or a ham.",
       "version": "1.0"
     },
