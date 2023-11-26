@@ -1,0 +1,1 @@
+docker-compose -f Docker\DATABASES\EMAIL_SCORING_DB\docker-compose-email-scoring-database.yaml down

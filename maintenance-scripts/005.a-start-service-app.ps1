@@ -1,0 +1,1 @@
+docker-compose -f Docker\EMAIL_SCORING_APP\docker-compose-email-scoring.yaml up
