@@ -120,7 +120,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -164,3 +163,31 @@ cython_debug/
 
 .vscode
 .vs
+
+
+
+.env.dev
+.env.staging
+.env.prod 
+.env.keys
+.flaskenv*
+# !.env.project
+!.env.vault
+
+# ignore any secrets
+secrets
+
+# ignore thge old version of the spam classifier
+ml_training_spam.py
+spam_test.csv
+
+# ignore the database initialisation config files
+initdb-scripts
+
+# ignore any log types
+LOGS
+
+# reject and ignore any temp local tests files
+*test_pre_commit*py
+*dummy*
+script-test.ps1

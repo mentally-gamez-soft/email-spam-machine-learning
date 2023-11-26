@@ -1,3 +1,15 @@
 .git
 *.pyc
 __pycache__
+.gitignore
+.env.dev
+.env.prod
+.env.staging
+.env.keys
+spam_test.csv
+ml_training_spam.py
+Docker
+maintenance-scripts
+# tests
+*.ps1
+zzz*test*

@@ -1,0 +1,35 @@
+repos:
+- repo: https://github.com/PyCQA/bandit
+  rev: 1.7.5
+  hooks:
+  - id: bandit
+
+# - repo: https://github.com/pylint-dev/pylint
+#   rev: v3.0.2
+#   hooks:
+#   - id: pylint
+
+- repo: https://github.com/PyCQA/pydocstyle
+  rev: 6.3.0
+  hooks:
+  - id: pydocstyle
+
+- repo: https://github.com/psf/black
+  rev: stable
+  hooks:
+  - id: black
+    args: ["--preview","--config","pyproject.toml"]
+    # language_version: python3.10.6
+
+- repo: https://github.com/PyCQA/isort
+  rev: 5.12.0
+  hooks:
+  - id: isort
+    exclude: maintenance-scripts/
+    args: ["--profile=black", --line-length=79]
+
+- repo: https://github.com/pycqa/flake8
+  rev: 6.1.0
+  hooks:
+  - id: flake8
+    exclude: 'maintenance-scripts|Docker|ml_model_export|data|spam.csv|spam_test.csv|requirements.in|requirements-dev.txt|README.md|.git|.github|pyproject.toml|Dockerfile|docker-compose.yaml|.dockerignore|.pre-commit-config.yaml|LICENSE|env|docs|static|swagger-conf|swagger.json|.venvpy3|.vscode|.flake8|.gitignore|initdb-scripts|Docker'
