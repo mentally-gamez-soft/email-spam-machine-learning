@@ -42,6 +42,7 @@ class IpAddressLocationService:
         self.database = app_env["DB_NAME"]
         self.user = app_env["DB_USER"]
         self.password = app_env["DB_PASSWORD"]
+        self.port = app_env["REDIS_PORT"]
 
     def is_known_ip_address(self) -> dict:
         """Indicate if the ip address of a end user has already call the service app.
@@ -78,7 +79,7 @@ class IpAddressLocationService:
         return self.__get_ip_address_from_ws_geotools()
 
     def __get_ip_address_from_redis_cache(self):
-        redis_cache = RedisManager()
+        redis_cache = RedisManager(hostname=self.hostname, port=self.port)
         cached_value = redis_cache.get_value(self.ip_address)
 
         if cached_value is not None:
@@ -89,7 +90,7 @@ class IpAddressLocationService:
 
     def set_ip_address_in_redis_cache(self):
         """Set the geolocation for an ip address in the redis cache."""
-        redis_cache = RedisManager()
+        redis_cache = RedisManager(hostname=self.hostname, port=self.port)
 
         redis_cache.set_value(self.ip_address, json.dumps(self.response))
 
