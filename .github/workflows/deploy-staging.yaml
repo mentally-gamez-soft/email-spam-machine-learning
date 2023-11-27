@@ -118,30 +118,31 @@ jobs:
           rm -f ~/work/_temp/dev_server_rsa
           rm -rf ~/work/_temp
 
-  deploy-production:
-    name: deploy application to production environment
+  create-release:
+    name: Create release
     runs-on: ${{matrix.os}}
-    env:
-      DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
-      DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
-      EMAIL_SCORING_APP: ${{secrets.EMAIL_SCORING_APP}}
     strategy:
       matrix:
         os: [ubuntu-latest]
         #version: ['3.11.6','3.11','3.10','3.9']
         version: ['3.11.6']
-    needs: build
-    environment: production
+    needs: [build,deploy-staging]
     steps:
-      - name: deploy application image on production environment
-        run: |
-          echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
-          chmod 400 ~/work/_temp/dev_server_rsa
-          ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa ${{secrets.SERVER_ADMIN_PROD}}@${{secrets.SERVER_HOSTNAME_PROD}} "
-            docker login -u $DOCKER_USER -p $DOCKER_PASS && 
-            source .profile &&
-            cd $EMAIL_SCORING_APP &&
-            ./stop_container.sh &&
-            ./start_container.sh"
-          rm -f ~/work/_temp/dev_server_rsa
-          rm -rf ~/work/_temp
+      - name: Create release tag
+        id: create-release-tag        
+        run: echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+      - name: Create draft release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create-release-tag.outputs.tag_name }}
+          name: Release ${{ steps.create-release-tag.outputs.tag_name }}
+          body: |
+            ## Info
+            Commit ${{ github.sha }} was deployed to `staging`. [See code diff](${{ github.event.compare }}).
+
+            It was initialized by [${{ github.event.sender.login }}](${{ github.event.sender.html_url }}).
+
+            ## How to validate?
+            In order to validate this to prod, edit the draft and press **"Publish release"**.
+          draft: true
+
