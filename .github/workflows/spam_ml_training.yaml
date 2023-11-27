@@ -17,7 +17,6 @@ jobs:
 
     runs-on: ${{matrix.os}}
     env:
-      DOCKER_IMG_VERSION: 2.0.0a
       DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
       DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
       DOCKER_IMG_NAME: ${{secrets.DOCKER_IMAGE_NAME}}:ws-email-scoring-
@@ -63,13 +62,17 @@ jobs:
         REDIS_PORT: 2222
     - name: docker build application image
       run: |
-        docker build --build-arg version_number=$DOCKER_IMG_VERSION -t $DOCKER_USER/$DOCKER_IMG_NAME${env.DOCKER_IMG_VERSION} .
+        docker build --build-arg version_number=$DOCKER_IMG_VERSION -t $DOCKER_USER/$DOCKER_IMG_NAME$DOCKER_IMG_VERSION .
+      env:
+        DOCKER_IMG_VERSION: 2.0.0a
     - name: docker login
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASS
     - name: docker push application image
       run: |
-        docker push $DOCKER_USER/$DOCKER_IMG_NAME${env.DOCKER_IMG_VERSION}   
+        docker push $DOCKER_USER/$DOCKER_IMG_NAME$DOCKER_IMG_VERSION   
+      env:
+          DOCKER_IMG_VERSION: 2.0.0a
     # - name: deploy on dev server 
     #   run: |
     #     echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
