@@ -20,6 +20,7 @@ jobs:
       DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
       DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
       DOCKER_IMG_NAME: ${{secrets.DOCKER_IMAGE_NAME}}:ws-email-scoring-
+      EMAIL_SCORING_APP: ${{secrets.EMAIL_SCORING_APP}}
     strategy:
       matrix:
         os: [ubuntu-latest]
