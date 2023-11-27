@@ -121,6 +121,8 @@ jobs:
   create-release:
     name: Create release
     runs-on: ${{matrix.os}}
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [ubuntu-latest]
