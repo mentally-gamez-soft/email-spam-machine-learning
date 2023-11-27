@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        version: ['3.11.6','3.11','3.10','3.9']
-        # version: ['3.10']
+        #version: ['3.11.6','3.11','3.10','3.9']
+        version: ['3.11.6']
 
     steps:
     - uses: actions/checkout@v3
@@ -73,16 +73,17 @@ jobs:
         docker push $DOCKER_USER/$DOCKER_IMG_NAME$DOCKER_IMG_VERSION   
       env:
           DOCKER_IMG_VERSION: 2.0.0a
-    # - name: deploy on dev server 
-    #   run: |
-    #     echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
-    #     chmod 400 ~/work/_temp/dev_server_rsa
-    #     ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa ${{secrets.SERVER_ADMIN_INTEG}}@${{secrets.SERVER_HOSTNAME_INTEG}} "
-    #       docker login -u $DOCKER_USER -p $DOCKER_PASS && 
-    #       source .profile &&         
-    #       docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml down &&
-    #       docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml up -d"
-    #     rm -f ~/work/_temp/dev_server_rsa
+    - name: deploy application image on staging environment
+      run: |
+        echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
+        chmod 400 ~/work/_temp/dev_server_rsa
+        ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa ${{secrets.SERVER_ADMIN_INTEG}}@${{secrets.SERVER_HOSTNAME_INTEG}} "
+          docker login -u $DOCKER_USER -p $DOCKER_PASS && 
+          source .profile &&         
+          docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml down &&
+          docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml up -d"
+        rm -f ~/work/_temp/dev_server_rsa
+        rm -rf ~/work/_temp
 
       # docker ps -aq | xargs docker stop | xargs docker rm
       # docker run -d -p 5000:5000 $DOCKER_USER/$DOCKER_IMG_NAME"
