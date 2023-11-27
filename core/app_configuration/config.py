@@ -31,8 +31,9 @@ class EnvLoader:
         self.env = env
 
     def __check_available_env(self) -> bool:
-        # if env['APP_ENV'] != 'local.dev' and not os.path.exists( os.path.join( self.env.get("EXTERNAL_ENV"), self.env.get("APP_NAME"), '.env.keys') ):
-        #     raise ConfigurationNotFoundException('The .env.keys file does not exists in environment.')
+        if self.env["APP_ENV"] == "cicd_runner":
+            return True
+
         if self.env["APP_ENV"] == "local.dev" and not os.path.exists(
             ".env.keys"
         ):
@@ -119,8 +120,9 @@ class EnvLoader:
     def get_env_config(self):
         """Load the environment variables of the application."""
         if self.__load_env():
-            self.__load_env_key()
-            self.__load_decyphered_env()
+            if self.env["APP_ENV"] != "cicd_runner":
+                self.__load_env_key()
+                self.__load_decyphered_env()
         else:
             raise ConfigurationNotFoundException(
                 "The .env.keys file does not exists"
