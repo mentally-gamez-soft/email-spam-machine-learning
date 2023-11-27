@@ -81,8 +81,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ~/work/_temp/dev_server_rsa ${{secrets.SERVER_ADMIN_INTEG}}@${{secrets.SERVER_HOSTNAME_INTEG}} "
           docker login -u $DOCKER_USER -p $DOCKER_PASS && 
           source .profile &&         
-          docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml down &&
-          docker-compose -f $EMAIL_SCORING_APP/docker-compose-email-scoring.yaml up -d"
+          $EMAIL_SCORING_APP/stop_container.sh &&
+          $EMAIL_SCORING_APP/start_container.sh"
         rm -f ~/work/_temp/dev_server_rsa
         rm -rf ~/work/_temp
 
