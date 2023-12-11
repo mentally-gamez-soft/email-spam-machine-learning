@@ -18,6 +18,7 @@ from core.services.ip_address_geolocator_service.ip_address_location_service imp
 from core.utils.databases.managers.factory.factory_db_manager import (
     FactoryDbManager,
 )
+from core.utils.simulator.data_simulator import simulate_ip_address
 
 urls_blueprint = Blueprint("api_urls", __name__)
 
@@ -70,17 +71,8 @@ def refine_model_email():
     message_status = "spam" if email_classification == "1" else "ham"
     user_ip_address = request.remote_addr
 
-    # # ###################################################################################################
-    # # #####################   MODULE FAKER TO FAKE THE IP ADDRESS ORIGIN  ###############################
-    # # ###################################################################################################
-    # from faker import Faker
-    # from faker.providers import internet
-    # fake = Faker(['es_ES'])
-    # fake.add_provider(internet)
-    # user_ip_address = fake.ipv4()
-    # # ###################################################################################################
-    # # ###################################################################################################
-    # # ###################################################################################################
+    if __is_simulation():
+        user_ip_address = simulate_ip_address()
 
     ip_address_location = __get_ip_address_location(ip_address=user_ip_address)
 
@@ -207,7 +199,11 @@ def __get_ip_address_location(ip_address: str) -> dict:
 
 
 def __add_email_to_csv_file(spam_ham_status: str, email: str):
-    spam_data_file = open("core/machine_learning/data/spam.csv", "a")
+    spam_data_file = open(
+        os.path.join("core", "machine_learning", "data", "spam.csv"),
+        "a",
+        encoding="utf-8",
+    )
     spam_data_file.write('\n"' + spam_ham_status + '","' + email + '"')
     spam_data_file.close()
 
@@ -216,17 +212,22 @@ def __is_model_ready_for_regenerate() -> bool:
     datenow = datetime.now()
     last_model_creation_time = datetime.fromtimestamp(
         os.path.getctime(
-            "core/machine_learning/ml_model_export/email_spam_detector_model.joblib"
+            os.path.join(
+                "core",
+                "machine_learning",
+                "ml_model_export",
+                "email_spam_detector_model.joblib",
+            )
         )
     )
-    one_day = timedelta(days=1)
+    five_minutes = timedelta(minutes=5)
 
-    return datenow - last_model_creation_time > one_day
+    return datenow - last_model_creation_time > five_minutes
 
 
 def __regenerate_model():
     email_spam_analyzer = EmailSpamAnalyzer(
-        "core/machine_learning/data/spam.csv"
+        os.path.join("core", "machine_learning", "data", "spam.csv")
     )
     email_spam_analyzer.sanitize_data()
     email_spam_analyzer.generate_model()
@@ -236,11 +237,25 @@ def __regenerate_model():
 
 def __analyze_email_with_trained_model(email: list):
     SVM = joblib.load(
-        "core/machine_learning/ml_model_export/email_spam_detector_model.joblib"
+        os.path.join(
+            "core",
+            "machine_learning",
+            "ml_model_export",
+            "email_spam_detector_model.joblib",
+        )
     )
     tf_vec = joblib.load(
-        "core/machine_learning/ml_model_export/tf_vectorizer.joblib"
+        os.path.join(
+            "core",
+            "machine_learning",
+            "ml_model_export",
+            "tf_vectorizer.joblib",
+        )
     )
-    email_transfromed = tf_vec.transform(email)
+    email_transformed = tf_vec.transform(email)
 
-    return SVM.predict(email_transfromed)
+    return SVM.predict(email_transformed)
+
+
+def __is_simulation() -> bool:
+    return os.environ.get("SIMULATION") == "1"

@@ -29,6 +29,7 @@ class EnvLoader:
         self.app_env_path = env_path
         self.vault = vault
         self.env = env
+        self.env["SIMULATION"] = "0"
 
     def __check_available_env(self) -> bool:
         if self.env["APP_ENV"] == "cicd_runner":
@@ -83,7 +84,10 @@ class EnvLoader:
         """
         # old_dotenv_key = self.env.get("DOTENV_KEY")
 
-        if self.env["APP_ENV"] in ("dev", "local.dev"):
+        if self.env["APP_ENV"] in ("local.dev"):
+            self.env["DOTENV_KEY"] = self.env.get("DOTENV_KEY_DEV")
+            self.env["SIMULATION"] = "1"
+        elif self.env["APP_ENV"] in ("dev"):
             self.env["DOTENV_KEY"] = self.env.get("DOTENV_KEY_DEV")
         elif self.env["APP_ENV"] == "integ":
             self.env["DOTENV_KEY"] = self.env.get("DOTENV_KEY_STAGING")
@@ -117,7 +121,7 @@ class EnvLoader:
         finally:
             os.unsetenv("DOTENV_KEY")
 
-    def get_env_config(self):
+    def get_env_config(self, simulate_env: str = None):
         """Load the environment variables of the application."""
         if self.__load_env():
             if self.env["APP_ENV"] != "cicd_runner":
@@ -127,6 +131,11 @@ class EnvLoader:
             raise ConfigurationNotFoundException(
                 "The .env.keys file does not exists"
             )
+
+        if simulate_env:
+            self.env["APP_ENV"] = simulate_env
+            self.env["SIMULATION"] = "1"
+            self.get_env_config()
 
 
 class AppConfigError(Exception):
@@ -201,11 +210,5 @@ class AppConfig:
         Returns:
             dict: The key-value pair of environment variables for the application.
         """
+        # print(self.__dict__)
         return self.__dict__
-
-
-# env_loader = EnvLoader()
-# env_loader.get_env_config()
-# config = AppConfig(env_loader.env)
-# app_env = config.get_application_env()
-# print(app_env)

@@ -21,7 +21,9 @@ from core.utils.data_sanitizer import DataSanitizer
 class EmailSpamAnalyzer:
     """The api that will be used to train emails spam and ham."""
 
-    def __init__(self, emails_filename: str) -> None:
+    def __init__(
+        self, emails_filename: str, download_libraries: bool = False
+    ) -> None:
         """Initialize the ml model trainer.
 
         Args:
@@ -36,10 +38,11 @@ class EmailSpamAnalyzer:
         self.model_accuracy_score = None
         self.y_test = None
         self.y_pred = None
-        self.__setup_nltk()
+        if download_libraries:
+            self.__setup_nltk()
 
     def __setup_nltk(self):
-        """Set the list of nl libraries."""
+        """Set the list of nltk libraries."""
         nltk.download("stopwords")
         nltk.download("wordnet")
         nltk.download("punkt")
