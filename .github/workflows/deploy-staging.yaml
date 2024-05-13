@@ -65,7 +65,7 @@ jobs:
       run: |
         docker build --build-arg version_number=$DOCKER_IMG_VERSION -t $DOCKER_USER/$DOCKER_IMG_NAME$DOCKER_IMG_VERSION .
       env:
-        DOCKER_IMG_VERSION: 2.0.0a
+        DOCKER_IMG_VERSION: 2.0.1
     - name: docker login
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -73,7 +73,7 @@ jobs:
       run: |
         docker push $DOCKER_USER/$DOCKER_IMG_NAME$DOCKER_IMG_VERSION   
       env:
-          DOCKER_IMG_VERSION: 2.0.0a
+          DOCKER_IMG_VERSION: 2.0.1
     # - name: deploy application image on staging environment
     #   run: |
     #     echo "${{ secrets.SSH_DEV_SERVER_CONTABO }}" > ~/work/_temp/dev_server_rsa
